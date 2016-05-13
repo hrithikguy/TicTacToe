@@ -20,23 +20,15 @@ def add_new_layer(root):
 		for i in range(1, 10):
 			if i not in root.moves:
 				y = Node(i)
-				#print (y.moves)
-				#print (y.move)
 				y.moves = list(root.moves)
-				#print (y.moves)
 				y.moves.append(i)
 				y.parent = root
 				if gamestatus(y.moves) != 0:
-					#print("winner!")
-					#print  y.moves
 					y.status = gamestatus(y.moves)
 					root.children = []
 					root.children.append(y)
 					break
 				root.children.append(y)
-				#print (y.moves)
-				#print (y.move)
-				#print ("added")
 	else:
 		for child in root.children:
 			add_new_layer(child)
@@ -119,7 +111,6 @@ def calculate_winning_percentages(root):
 	output = output/len(root.children)
 	
 	root.winningpercentage = output
-	#print output
 
 
 
@@ -134,19 +125,15 @@ def printboard(input):
 	for i in range(0, 9):
 		if (array[i] == 1):
 			sys.stdout.write('X')
-#			print('X', end="");
 		
 		if (array[i] == 0): 
 			sys.stdout.write('_')
-#			print("_", end="");
 		
 		if (array[i] == 2): 
 			sys.stdout.write('O')
-#			print("O", end="");
 		
 		if (i % 3 == 2): 
 			sys.stdout.write('\n')
-#			print("\n", end="");
 		
 
 
@@ -215,8 +202,6 @@ def computer_goes_first(y):
 		maxwinningpercentage = 2
 		print (movearray)
 		for child in y.children:
-			#print (child.move)
-			#print (child.winningpercentage)
 			if child.winningpercentage < maxwinningpercentage:
 				maxwinningpercentage = child.winningpercentage
 				bestmove = child.move
@@ -248,24 +233,13 @@ def computer_goes_first(y):
 			break
 print ("Loading...")
 y = Node(0)
-#print (y.move)
-#print_tree(y)
-#print (y.children)
 
 
 for i in range(1, 10):
 	add_new_layer(y)
-#	print (i)
-#	print "done"
-#	print size_of_tree(y)
 
 game_endings(y)
 calculate_winning_percentages(y)
-#print_winning_percentages(y)
-#print (y.winningpercentage)
-#for child in y.children[4].children:
-#	print child.winningpercentage
-
 
 
 firstorsecond = raw_input("Type 1 if you want to first, or 2 if you want to go second: ")
