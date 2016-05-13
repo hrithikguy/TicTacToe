@@ -10,7 +10,7 @@ class Node:
         self.parent = None
         self.children = []
         self.status = 0
-        self.winningpercentage = -1
+        self.winningpercentage = -1.0
         if children:
         	for child in children:
         		self.children.append(child)
@@ -72,7 +72,7 @@ def gamestatus(input):
 	return 0;
 
 def print_tree(root):
-	print(root.move)
+	print(root.winningpercentage)
 	print (root.moves)
 	if not root.children:
 		return
@@ -89,28 +89,38 @@ def size_of_tree(root):
 			output += size_of_tree(child)
 		return output
 
-def calculate_winning_percentages(root):
+def game_endings(root):
 	if not root.children:
 		if root.status == 1:
-			root.winningpercentage = 0
-			return 0
+			root.winningpercentage = 0.0
+			return
 		if root.status == 2:
-			root.winningpercentage = 1
-			return 1
+			root.winningpercentage = 1.0
+			return
 		if root.status == 0:
 			root.winningpercentage = 0.5
-			return 0.5
+			return
+
+	for child in root.children:
+		game_endings(child)
+
+def calculate_winning_percentages(root):
+	if not root.children:
+		return
 
 	for child in root.children:
 		calculate_winning_percentages(child)
-
+	
 	output = 0
 	for child in root.children:
 		output += child.winningpercentage
+	
 
 	output = output/len(root.children)
+	
 	root.winningpercentage = output
 	#print output
+
 
 
 def printboard(input):
@@ -174,7 +184,7 @@ def player_goes_first(y):
 					y = child
 					break
 		bestmove = -1
-		maxwinningpercentage = 0
+		maxwinningpercentage = -1
 		for child in y.children:
 			if child.winningpercentage > maxwinningpercentage:
 				maxwinningpercentage = child.winningpercentage
@@ -185,6 +195,9 @@ def player_goes_first(y):
 		gamewon = gamestatus(movearray)
 		if (gamewon != 0):
 			print("sorry! you lose!")
+			break
+		if len(movearray) == 9:
+			print ("the game is a tie!")
 			break
 
 def computer_goes_first(y):
@@ -199,8 +212,11 @@ def computer_goes_first(y):
 						y = child
 						break
 		bestmove = -1
-		maxwinningpercentage = 1
+		maxwinningpercentage = 2
+		print (movearray)
 		for child in y.children:
+			#print (child.move)
+			#print (child.winningpercentage)
 			if child.winningpercentage < maxwinningpercentage:
 				maxwinningpercentage = child.winningpercentage
 				bestmove = child.move
@@ -210,6 +226,9 @@ def computer_goes_first(y):
 		gamewon = gamestatus(movearray)
 		if (gamewon != 0):
 			print("sorry! you lose!")
+			break
+		if len(movearray) == 9:
+			print ("the game is a tie!")
 			break
 
 		move = raw_input("Enter the square of your move: ")
@@ -240,11 +259,14 @@ for i in range(1, 10):
 #	print "done"
 #	print size_of_tree(y)
 
+game_endings(y)
 calculate_winning_percentages(y)
 #print_winning_percentages(y)
 #print (y.winningpercentage)
 #for child in y.children[4].children:
 #	print child.winningpercentage
+
+
 
 firstorsecond = raw_input("Type 1 if you want to first, or 2 if you want to go second: ")
 firstorsecond = int(firstorsecond)
